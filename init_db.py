@@ -4,6 +4,7 @@ This is safe to run on every Render start: schema.sql uses CREATE IF NOT EXISTS
 and CREATE OR REPLACE VIEW, and does not drop or truncate application data.
 """
 import os
+import tempfile
 from pathlib import Path
 
 import mysql.connector
@@ -21,6 +22,10 @@ DB_CONFIG = {
 
 ssl_ca = os.getenv("DB_SSL_CA")
 if ssl_ca:
+    if "-----BEGIN CERTIFICATE-----" in ssl_ca:
+        ca_path = Path(tempfile.gettempdir()) / "aiven-mysql-ca.pem"
+        ca_path.write_text(ssl_ca.rstrip() + "\n", encoding="utf-8")
+        ssl_ca = str(ca_path)
     DB_CONFIG.update(
         ssl_ca=ssl_ca,
         ssl_verify_cert=True,
