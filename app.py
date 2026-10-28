@@ -18,9 +18,13 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 load_dotenv()
 
+secret_key = os.getenv("SECRET_KEY")
+if os.getenv("FLASK_DEBUG", "1") != "1" and not secret_key:
+    raise RuntimeError("SECRET_KEY must be set when FLASK_DEBUG is disabled.")
+
 app = Flask(__name__)
 app.config.update(
-    SECRET_KEY=os.getenv("SECRET_KEY", "local-development-key-change-this"),
+    SECRET_KEY=secret_key or "local-development-key-change-this",
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE="Lax",
     # Set COOKIE_SECURE=1 only when running behind HTTPS.
@@ -41,6 +45,15 @@ DB_CONFIG = {
     "charset": "utf8mb4",
     "use_unicode": True,
 }
+
+# Optional CA bundle for hosted MySQL providers that require verified TLS.
+_db_ssl_ca = os.getenv("DB_SSL_CA")
+if _db_ssl_ca:
+    DB_CONFIG.update(
+        ssl_ca=_db_ssl_ca,
+        ssl_verify_cert=True,
+        ssl_verify_identity=True,
+    )
 
 
 def get_db():
@@ -573,3 +586,4 @@ def database_error(error):
 if __name__ == "__main__":
     # Debug mode is convenient for local college projects. Do not use it in production.
     app.run(host="127.0.0.1", port=int(os.getenv("PORT", "5000")), debug=os.getenv("FLASK_DEBUG", "1") == "1")
+
