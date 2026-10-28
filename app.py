@@ -6,6 +6,8 @@ Do not connect it to real bank accounts or use it as a production banking system
 
 import os
 import secrets
+import tempfile
+from pathlib import Path
 from decimal import Decimal, InvalidOperation
 from functools import wraps
 
@@ -46,9 +48,14 @@ DB_CONFIG = {
     "use_unicode": True,
 }
 
-# Optional CA bundle for hosted MySQL providers that require verified TLS.
+# DB_SSL_CA may be either a provider CA file path or PEM content from
+# Render's private environment settings.
 _db_ssl_ca = os.getenv("DB_SSL_CA")
 if _db_ssl_ca:
+    if "-----BEGIN CERTIFICATE-----" in _db_ssl_ca:
+        _ca_path = Path(tempfile.gettempdir()) / "aiven-mysql-ca.pem"
+        _ca_path.write_text(_db_ssl_ca.rstrip() + "\n", encoding="utf-8")
+        _db_ssl_ca = str(_ca_path)
     DB_CONFIG.update(
         ssl_ca=_db_ssl_ca,
         ssl_verify_cert=True,
