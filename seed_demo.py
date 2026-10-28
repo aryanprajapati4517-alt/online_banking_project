@@ -5,6 +5,9 @@ accounts and the example beneficiary. Passwords are for the local demo only.
 """
 import os
 import secrets
+import tempfile
+from pathlib import Path
+
 import mysql.connector
 from werkzeug.security import generate_password_hash
 
@@ -17,6 +20,20 @@ DB_CONFIG = {
     "charset": "utf8mb4",
     "use_unicode": True,
 }
+
+# DB_SSL_CA may be either a provider CA file path or PEM content from
+# Render's private environment settings.
+ssl_ca = os.getenv("DB_SSL_CA")
+if ssl_ca:
+    if "-----BEGIN CERTIFICATE-----" in ssl_ca:
+        ca_path = Path(tempfile.gettempdir()) / "aiven-mysql-ca.pem"
+        ca_path.write_text(ssl_ca.rstrip() + "\n", encoding="utf-8")
+        ssl_ca = str(ca_path)
+    DB_CONFIG.update(
+        ssl_ca=ssl_ca,
+        ssl_verify_cert=True,
+        ssl_verify_identity=True,
+    )
 
 DEMO_USERS = [
     {
