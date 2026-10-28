@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block title %}Error {{ code }}{% endblock %}
+{% block content %}
+<section class="narrow-layout"><div class="panel error-panel"><div class="error-code">{{ code }}</div><h1>We couldn't complete that request</h1><p>{{ message }}</p><a class="button button-primary" href="{{ url_for('index') }}">Return to VaultBank</a></div></section>
+{% endblock %}

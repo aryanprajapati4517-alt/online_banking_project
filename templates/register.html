@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Create account{% endblock %}
+{% block content %}
+<section class="narrow-layout">
+  <div class="section-heading">
+    <div class="eyebrow">GET STARTED</div>
+    <h1>Open a demo account</h1>
+    <p>Enter sample details to create a customer profile, login and savings account in MySQL.</p>
+  </div>
+  <div class="panel form-panel">
+    <form method="post" class="form-grid">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+      <div class="field full"><label for="full_name">Full name *</label><input id="full_name" name="full_name" required maxlength="100" autocomplete="name" value="{{ request.form.get('full_name', '') }}"></div>
+      <div class="field"><label for="email">Email *</label><input id="email" name="email" type="email" required maxlength="120" autocomplete="email" value="{{ request.form.get('email', '') }}"></div>
+      <div class="field"><label for="phone">Phone</label><input id="phone" name="phone" maxlength="20" autocomplete="tel" value="{{ request.form.get('phone', '') }}"></div>
+      <div class="field full"><label for="address">Address</label><input id="address" name="address" maxlength="255" autocomplete="street-address" value="{{ request.form.get('address', '') }}"></div>
+      <div class="field full"><label for="username">Choose username *</label><input id="username" name="username" required minlength="4" maxlength="50" autocomplete="username" value="{{ request.form.get('username', '') }}"><small>At least 4 characters.</small></div>
+      <div class="field"><label for="password">Password *</label><input id="password" name="password" type="password" required minlength="8" autocomplete="new-password"><small>At least 8 characters.</small></div>
+      <div class="field"><label for="confirm_password">Confirm password *</label><input id="confirm_password" name="confirm_password" type="password" required minlength="8" autocomplete="new-password"></div>
+      <div class="field full"><button type="submit" class="button button-primary button-wide">Create demo account <span>→</span></button></div>
+    </form>
+    <p class="form-note">This creates fictional demo data only. Do not enter your real banking password or sensitive personal information.</p>
+  </div>
+</section>
+{% endblock %}

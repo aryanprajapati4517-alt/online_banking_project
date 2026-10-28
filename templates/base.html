@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101a2d">
+  <title>{% block title %}VaultBank Demo{% endblock %} · VaultBank</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('index') }}" aria-label="VaultBank home">
+      <span class="brand-mark">V</span>
+      <span>Vault<span class="brand-light">Bank</span><small>DBMS PROJECT DEMO</small></span>
+    </a>
+    {% if session.get('user_id') %}
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="{{ url_for('dashboard') }}">Overview</a>
+        <a href="{{ url_for('transfer') }}">Transfer</a>
+        <a href="{{ url_for('beneficiaries') }}">Beneficiaries</a>
+        <a href="{{ url_for('transactions_page') }}">Transactions</a>
+      </nav>
+      <div class="user-actions">
+        <span class="welcome-user">{{ session.get('full_name', 'Customer') }}</span>
+        <form action="{{ url_for('logout') }}" method="post" class="inline-form">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+          <button class="button button-ghost button-small" type="submit">Log out</button>
+        </form>
+      </div>
+    {% else %}
+      <nav class="nav-links"><a href="{{ url_for('login') }}">Log in</a><a class="nav-cta" href="{{ url_for('register') }}">Open demo account</a></nav>
+    {% endif %}
+  </header>
+
+  <main class="page-shell">
+    <div class="demo-banner"><span class="pulse-dot"></span><span><strong>Student demonstration only.</strong> All balances and transfers are fictional; no real bank or payment network is connected.</span></div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-stack" aria-live="polite">
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <span>VaultBank · Online Banking System</span>
+    <span>Built for DBMS coursework · Flask + MySQL</span>
+  </footer>
+</body>
+</html>

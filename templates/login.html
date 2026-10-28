@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Log in{% endblock %}
+{% block content %}
+<section class="auth-layout">
+  <div class="auth-story">
+    <div class="eyebrow">YOUR MONEY, ORGANIZED</div>
+    <h1>Banking made<br><span class="text-accent">easy to understand.</span></h1>
+    <p>A classroom banking portal to explore database relationships, secure sign-in, account operations and transaction records.</p>
+    <div class="story-points">
+      <div><span class="point-icon">↗</span><span><strong>Fast transfers</strong><small>Simulated account-to-account transfers</small></span></div>
+      <div><span class="point-icon">▤</span><span><strong>Clear transaction history</strong><small>Every successful operation is recorded</small></span></div>
+      <div><span class="point-icon">⌘</span><span><strong>Built on a relational database</strong><small>Foreign keys, constraints and SQL joins</small></span></div>
+    </div>
+  </div>
+  <div class="auth-card">
+    <div class="card-kicker">WELCOME BACK</div>
+    <h2>Sign in to VaultBank</h2>
+    <p class="muted">Use a demo login or create your own account.</p>
+    <form method="post" class="form-stack">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+      <label for="username">Username</label>
+      <input id="username" name="username" autocomplete="username" placeholder="Enter username" required maxlength="50">
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter password" required>
+      <button class="button button-primary button-wide" type="submit">Sign in <span>→</span></button>
+    </form>
+    <div class="auth-foot">New here? <a href="{{ url_for('register') }}">Create an account</a></div>
+    <div class="demo-login">
+      <strong>Demo credentials</strong>
+      <span>Username: <code>demo1</code></span>
+      <span>Password: <code>LearnDBMS123!</code></span>
+      <small>Run <code>seed_demo.py</code> to create these accounts.</small>
+    </div>
+  </div>
+</section>
+{% endblock %}

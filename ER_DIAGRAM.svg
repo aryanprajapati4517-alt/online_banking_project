@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">VaultBank Online Banking System ER Diagram</title>
+  <desc id="desc">Entity relationship diagram with customers, users, accounts, beneficiaries and transactions.</desc>
+  <defs>
+    <style>
+      .bg{fill:#f5f7fb}.entity{fill:#fff;stroke:#ced7e5;stroke-width:1.5}.head{fill:#182743}.headtext{fill:#fff;font:700 17px Arial,sans-serif}.field{fill:#28364c;font:14px Arial,sans-serif}.key{fill:#a77b3f;font:700 12px Arial,sans-serif}.line{fill:none;stroke:#9aabc2;stroke-width:2}.label{fill:#58677e;font:12px Arial,sans-serif}.title{fill:#16253d;font:700 27px Arial,sans-serif}.subtitle{fill:#7a8799;font:14px Arial,sans-serif}
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#9aabc2"/></marker>
+  </defs>
+  <rect class="bg" width="1200" height="760" rx="20"/>
+  <text x="48" y="51" class="title">VaultBank · Entity Relationship Diagram</text>
+  <text x="48" y="78" class="subtitle">Online Banking System · Python Flask + MySQL · Educational simulation</text>
+
+  <!-- Relationship connectors behind the entities -->
+  <path class="line" d="M315 230 L370 230 L370 280 L425 280" marker-end="url(#arrow)"/>
+  <text x="323" y="216" class="label">1 : 1</text>
+  <path class="line" d="M315 160 L350 160 L350 480 L425 480" marker-end="url(#arrow)"/>
+  <text x="324" y="147" class="label">1 : many</text>
+  <path class="line" d="M600 340 L600 408" marker-end="url(#arrow)"/>
+  <text x="612" y="379" class="label">1 : many</text>
+  <path class="line" d="M775 480 L830 480 L830 350 L875 350" marker-end="url(#arrow)"/>
+  <text x="786" y="465" class="label">saved recipient</text>
+  <path class="line" d="M775 545 L850 545 L850 170 L875 170" marker-end="url(#arrow)"/>
+  <text x="788" y="530" class="label">source / destination</text>
+
+  <!-- Customers -->
+  <g transform="translate(65 120)">
+    <rect class="entity" width="250" height="220" rx="12"/>
+    <path d="M77 0 H238 Q250 0 250 12 V42 H0 V12 Q0 0 12 0 Z" class="head"/>
+    <text x="17" y="27" class="headtext">CUSTOMERS</text>
+    <text x="17" y="68" class="key">PK  customer_id</text>
+    <text x="17" y="95" class="field">full_name</text><text x="17" y="121" class="field">email (UNIQUE)</text><text x="17" y="147" class="field">phone</text><text x="17" y="173" class="field">address</text><text x="17" y="199" class="field">created_at</text>
+  </g>
+  <!-- Users -->
+  <g transform="translate(425 120)">
+    <rect class="entity" width="350" height="220" rx="12"/>
+    <path d="M12 0 H338 Q350 0 350 12 V42 H0 V12 Q0 0 12 0 Z" class="head"/>
+    <text x="17" y="27" class="headtext">USERS</text>
+    <text x="17" y="68" class="key">PK  user_id</text><text x="17" y="95" class="key">FK  customer_id (UNIQUE)</text>
+    <text x="17" y="122" class="field">username (UNIQUE)</text><text x="17" y="149" class="field">password_hash</text><text x="17" y="176" class="field">created_at</text>
+  </g>
+  <!-- Accounts -->
+  <g transform="translate(425 408)">
+    <rect class="entity" width="350" height="235" rx="12"/>
+    <path d="M12 0 H338 Q350 0 350 12 V42 H0 V12 Q0 0 12 0 Z" class="head"/>
+    <text x="17" y="27" class="headtext">ACCOUNTS</text>
+    <text x="17" y="68" class="key">PK  account_id</text><text x="17" y="95" class="key">FK  customer_id</text>
+    <text x="17" y="122" class="field">account_number (UNIQUE)</text><text x="17" y="149" class="field">account_type</text><text x="17" y="176" class="field">balance DECIMAL(14,2)</text><text x="17" y="203" class="field">status · created_at</text>
+  </g>
+  <!-- Beneficiaries -->
+  <g transform="translate(875 280)">
+    <rect class="entity" width="275" height="185" rx="12"/>
+    <path d="M12 0 H263 Q275 0 275 12 V42 H0 V12 Q0 0 12 0 Z" class="head"/>
+    <text x="17" y="27" class="headtext">BENEFICIARIES</text>
+    <text x="17" y="68" class="key">PK  beneficiary_id</text><text x="17" y="95" class="key">FK  customer_id</text><text x="17" y="122" class="key">FK  beneficiary_account_id</text><text x="17" y="149" class="field">nickname · created_at</text>
+  </g>
+  <!-- Transactions -->
+  <g transform="translate(875 90)">
+    <rect class="entity" width="275" height="160" rx="12"/>
+    <path d="M12 0 H263 Q275 0 275 12 V42 H0 V12 Q0 0 12 0 Z" class="head"/>
+    <text x="17" y="27" class="headtext">TRANSACTIONS</text>
+    <text x="17" y="68" class="key">PK  transaction_id</text><text x="17" y="95" class="key">FK  from_account_id</text><text x="17" y="122" class="key">FK  to_account_id</text><text x="17" y="145" class="field">type · amount · reference</text>
+  </g>
+  <text x="48" y="710" class="subtitle">PK = Primary Key · FK = Foreign Key · Check exact columns and constraints in schema.sql.</text>
+</svg>

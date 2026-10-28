@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Transfer{% endblock %}
+{% block content %}
+<section class="welcome-row"><div><div class="eyebrow">PAYMENTS</div><h1>Transfer money</h1><p class="muted">Move fictional demo funds between active VaultBank accounts.</p></div><a class="button button-outline" href="{{ url_for('dashboard') }}">← Back to overview</a></section>
+<div class="transfer-layout">
+  <section class="panel transfer-panel"><div class="transfer-badge">↗</div><h2>New transfer</h2><p class="muted">The transfer and its transaction record are committed together in MySQL.</p>
+    <form method="post" class="form-stack transfer-form">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+      <label for="source_account_id">From account</label>
+      <select id="source_account_id" name="source_account_id" required>{% for a in accounts if a.status == 'ACTIVE' %}<option value="{{ a.account_id }}">{{ a.account_type|title }} · •••• {{ a.account_number[-4:] }} — {{ a.balance|inr }}</option>{% endfor %}</select>
+      <label for="destination_account_number">Recipient account number</label>
+      <input id="destination_account_number" name="destination_account_number" inputmode="numeric" maxlength="12" pattern="[0-9]{12}" placeholder="Enter 12-digit demo account number" required>
+      {% if beneficiaries %}<div class="saved-recipient-label">Saved recipients (click a number to use it)</div><div class="saved-recipients">{% for b in beneficiaries %}<button type="button" class="recipient-chip" data-account="{{ b.account_number }}" onclick="document.getElementById('destination_account_number').value = this.dataset.account"><strong>{{ b.nickname }}</strong><span>{{ b.account_number }}</span></button>{% endfor %}</div>{% endif %}
+      <label for="amount">Amount (₹)</label><input id="amount" name="amount" type="number" min="0.01" max="10000000" step="0.01" placeholder="0.00" required>
+      <div class="security-note"><span>ⓘ</span><span>Check the destination account number carefully. This project simulates transfers and does not connect to UPI, NEFT or real banking systems.</span></div>
+      <button class="button button-primary button-wide" type="submit" {% if not accounts or not (accounts|selectattr('status','equalto','ACTIVE')|list) %}disabled{% endif %}>Confirm demo transfer <span>→</span></button>
+    </form>
+  </section>
+  <aside class="transfer-side"><div class="panel side-panel"><div class="eyebrow">HOW IT WORKS</div><h3>One safe database transaction</h3><ol class="steps-list"><li><span>1</span><div><strong>Validate</strong><small>Check source ownership and both accounts.</small></div></li><li><span>2</span><div><strong>Lock rows</strong><small>Lock balances to avoid conflicting changes.</small></div></li><li><span>3</span><div><strong>Update balances</strong><small>Debit sender and credit recipient.</small></div></li><li><span>4</span><div><strong>Record and commit</strong><small>Save one transaction history record.</small></div></li></ol></div>
+    <div class="side-tip"><strong>Testing tip</strong><p>Use <code>demo1</code> as sender and account <code>100000000002</code> as receiver after running the demo seed script.</p></div>
+  </aside>
+</div>
+{% endblock %}

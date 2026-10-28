@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Overview{% endblock %}
+{% block content %}
+<section class="welcome-row">
+  <div><div class="eyebrow">CUSTOMER OVERVIEW</div><h1>Hello, {{ session.get('full_name', 'there') }} <span class="wave">✦</span></h1><p class="muted">Here is the latest snapshot of your demo finances.</p></div>
+  <a href="{{ url_for('transfer') }}" class="button button-primary">Make a transfer <span>↗</span></a>
+</section>
+<section class="summary-grid">
+  <article class="summary-card summary-main"><div class="summary-top"><span>Total demo balance</span><span class="summary-icon">₹</span></div><div class="balance-number">{{ total_balance|inr }}</div><div class="summary-bottom"><span class="status-pill"><span class="tiny-dot"></span> Demo balance</span><span>{{ accounts|length }} account{% if accounts|length != 1 %}s{% endif %}</span></div><div class="card-watermark">V</div></article>
+  <article class="summary-card"><div class="summary-top"><span>Accounts</span><span class="summary-icon light-icon">▤</span></div><div class="metric-number">{{ accounts|length }}</div><p class="metric-note">Linked to your customer profile</p><a class="text-link" href="#accounts">View accounts →</a></article>
+  <article class="summary-card"><div class="summary-top"><span>Recent activity</span><span class="summary-icon light-icon">⌁</span></div><div class="metric-number">{{ transactions|length }}</div><p class="metric-note">Most recent records shown below</p><a class="text-link" href="{{ url_for('transactions_page') }}">View history →</a></article>
+</section>
+
+<section id="accounts" class="section-block">
+  <div class="section-title-row"><div><div class="eyebrow">YOUR MONEY</div><h2>My accounts</h2></div><span class="section-count">{{ accounts|length }} linked</span></div>
+  {% if accounts %}
+    <div class="account-grid">
+      {% for account in accounts %}
+        <article class="account-card">
+          <div class="account-card-top"><span class="account-chip">▦</span><span class="account-status status-{{ account.status|lower }}">{{ account.status|title }}</span></div>
+          <div class="account-type">{{ account.account_type|title }} account</div>
+          <div class="account-number">•••• •••• {{ account.account_number[-4:] }}</div>
+          <div class="account-balance-label">Available demo balance</div>
+          <div class="account-balance">{{ account.balance|inr }}</div>
+          <div class="account-footer"><span>Account ID: {{ account.account_id }}</span><span>VaultBank</span></div>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}<div class="empty-state">No accounts have been created yet.</div>{% endif %}
+</section>
+
+<section class="section-block">
+  <div class="section-title-row"><div><div class="eyebrow">QUICK ACTIONS</div><h2>Move demo money</h2></div></div>
+  <div class="action-grid">
+    <article class="panel action-panel"><div class="action-heading"><span class="action-icon deposit-icon">＋</span><div><h3>Deposit</h3><p>Add fictional money to a demo account.</p></div></div>
+      <form method="post" action="{{ url_for('deposit') }}" class="form-stack compact-form">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+        <label for="deposit_account">Account</label><select id="deposit_account" name="account_id" required>{% for a in accounts if a.status == 'ACTIVE' %}<option value="{{ a.account_id }}">{{ a.account_type|title }} · •••• {{ a.account_number[-4:] }}</option>{% endfor %}</select>
+        <label for="deposit_amount">Amount (₹)</label><input id="deposit_amount" name="amount" type="number" min="0.01" max="10000000" step="0.01" placeholder="e.g. 500" required>
+        <button class="button button-success button-wide" type="submit" {% if not accounts or not (accounts|selectattr('status','equalto','ACTIVE')|list) %}disabled{% endif %}>Deposit money</button>
+      </form>
+    </article>
+    <article class="panel action-panel"><div class="action-heading"><span class="action-icon withdraw-icon">−</span><div><h3>Withdraw</h3><p>Withdraw fictional money from your balance.</p></div></div>
+      <form method="post" action="{{ url_for('withdraw') }}" class="form-stack compact-form">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+        <label for="withdraw_account">Account</label><select id="withdraw_account" name="account_id" required>{% for a in accounts if a.status == 'ACTIVE' %}<option value="{{ a.account_id }}">{{ a.account_type|title }} · •••• {{ a.account_number[-4:] }}</option>{% endfor %}</select>
+        <label for="withdraw_amount">Amount (₹)</label><input id="withdraw_amount" name="amount" type="number" min="0.01" max="10000000" step="0.01" placeholder="e.g. 200" required>
+        <button class="button button-outline button-wide" type="submit" {% if not accounts or not (accounts|selectattr('status','equalto','ACTIVE')|list) %}disabled{% endif %}>Withdraw money</button>
+      </form>
+    </article>
+  </div>
+  {% if not accounts or not (accounts|selectattr('status','equalto','ACTIVE')|list) %}<p class="muted small-note">No active accounts available for deposits or withdrawals.</p>{% endif %}
+</section>
+
+<section class="section-block">
+  <div class="section-title-row"><div><div class="eyebrow">LATEST RECORDS</div><h2>Recent transactions</h2></div><a class="text-link" href="{{ url_for('transactions_page') }}">See all transactions →</a></div>
+  {% if transactions %}
+    <div class="table-wrap"><table><thead><tr><th>Transaction</th><th>Reference</th><th>Accounts</th><th>Date & time</th><th class="align-right">Amount</th><th>Status</th></tr></thead><tbody>
+      {% for t in transactions %}
+        <tr><td><div class="transaction-title">{{ t.transaction_type|title }}</div><div class="subtext">{{ t.description or 'Banking transaction' }}</div></td><td><code>{{ t.reference_code }}</code></td><td><span class="account-route">{{ t.from_account_number or 'External deposit' }}<br><span class="route-arrow">↓</span><br>{{ t.to_account_number or 'External withdrawal' }}</span></td><td>{{ t.transaction_time.strftime('%d %b %Y') }}<div class="subtext">{{ t.transaction_time.strftime('%I:%M %p') }}</div></td><td class="align-right amount-cell">{{ t.amount|inr }}</td><td><span class="status-pill status-success">{{ t.status|title }}</span></td></tr>
+      {% endfor %}
+    </tbody></table></div>
+  {% else %}<div class="empty-state"><div class="empty-icon">⌁</div><strong>No transactions yet</strong><p>Deposit demo money or make a transfer to see your first record.</p></div>{% endif %}
+</section>
+{% endblock %}

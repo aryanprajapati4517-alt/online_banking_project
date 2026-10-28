@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Beneficiaries{% endblock %}
+{% block content %}
+<section class="welcome-row"><div><div class="eyebrow">RECIPIENTS</div><h1>Beneficiaries</h1><p class="muted">Save another demo account for faster transfers.</p></div><a class="button button-primary" href="{{ url_for('transfer') }}">Transfer money ↗</a></section>
+<div class="beneficiary-layout">
+  <section class="panel beneficiary-form-panel"><div class="eyebrow">ADD RECIPIENT</div><h2>Save a beneficiary</h2><form method="post" class="form-stack">
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+    <label for="nickname">Nickname</label><input id="nickname" name="nickname" maxlength="50" placeholder="e.g. College friend">
+    <label for="account_number">12-digit account number</label><input id="account_number" name="account_number" pattern="[0-9]{12}" maxlength="12" inputmode="numeric" required placeholder="100000000002">
+    <button class="button button-primary button-wide" type="submit">Save beneficiary</button>
+  </form></section>
+  <section class="panel beneficiary-list-panel"><div class="eyebrow">SAVED RECIPIENTS</div><h2>Your list</h2>
+    {% if beneficiaries %}<div class="beneficiary-list">{% for b in beneficiaries %}<div class="beneficiary-row"><div class="recipient-avatar">{{ (b.nickname or b.account_holder)[0]|upper }}</div><div class="recipient-info"><strong>{{ b.nickname }}</strong><span>{{ b.account_holder }}</span><code>{{ b.account_number }}</code></div><form method="post" action="{{ url_for('delete_beneficiary', beneficiary_id=b.beneficiary_id) }}" onsubmit="return confirm('Remove this beneficiary?')"><input type="hidden" name="_csrf_token" value="{{ csrf_token() }}"><button class="button button-ghost button-small" type="submit">Remove</button></form></div>{% endfor %}</div>
+    {% else %}<div class="empty-state"><strong>No saved beneficiaries</strong><p>Add a recipient using their demo account number.</p></div>{% endif %}
+  </section>
+</div>
+{% endblock %}
