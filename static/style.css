@@ -252,3 +252,112 @@ td code { color: #64738b; font-size: 9px; }
   .demo-banner { align-items: flex-start; line-height: 1.5; }
   .footer { align-items: flex-start; flex-direction: column; }
 }
+
+
+/* Theme toggle and dark palette. */
+.theme-toggle {
+  min-height: 34px;
+  color: #eef2f8;
+  border-color: rgba(255,255,255,.25);
+  background: rgba(255,255,255,.06);
+}
+.theme-toggle:hover:not(:disabled) { color: #fff; background: rgba(255,255,255,.14); }
+.theme-icon { font-size: 13px; line-height: 1; }
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #e6edf7;
+  --muted: #a7b3c5;
+  --line: #344259;
+  --bg: #0d1422;
+  --white: #172131;
+  --shadow: 0 16px 44px rgba(0,0,0,.24);
+}
+:root[data-theme="dark"] body { background: var(--bg); color: var(--ink); }
+:root[data-theme="dark"] .demo-banner {
+  background: #2b251a; color: #e4c992; border-color: #51432b;
+}
+:root[data-theme="dark"] .flash-success { background: #153424; color: #bfe8cd; border-color: #28583d; }
+:root[data-theme="dark"] .flash-danger { background: #3b2027; color: #f1c4cb; border-color: #71404a; }
+:root[data-theme="dark"] .flash-warning { background: #3a301b; color: #f0d99f; border-color: #65512b; }
+:root[data-theme="dark"] .flash-info { background: #1b2d45; color: #c6dcfb; border-color: #344f73; }
+:root[data-theme="dark"] .auth-story h1 { color: var(--ink); }
+:root[data-theme="dark"] .auth-story > p,
+:root[data-theme="dark"] .story-points small,
+:root[data-theme="dark"] .metric-note,
+:root[data-theme="dark"] .action-heading p,
+:root[data-theme="dark"] .field small,
+:root[data-theme="dark"] .recipient-info span { color: var(--muted); }
+:root[data-theme="dark"] .point-icon,
+:root[data-theme="dark"] .auth-card,
+:root[data-theme="dark"] .panel,
+:root[data-theme="dark"] .form-panel,
+:root[data-theme="dark"] .beneficiary-form-panel,
+:root[data-theme="dark"] .beneficiary-list-panel,
+:root[data-theme="dark"] .side-panel {
+  background: var(--white); border-color: var(--line);
+}
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select {
+  background: #101a2a; color: var(--ink); border-color: #3b4960;
+}
+:root[data-theme="dark"] input::placeholder { color: #8290a5; }
+:root[data-theme="dark"] label { color: #d1d9e5; }
+:root[data-theme="dark"] .button-outline {
+  color: var(--ink); background: #1a2638; border-color: #3a4960;
+}
+:root[data-theme="dark"] .button-outline:hover:not(:disabled),
+:root[data-theme="dark"] .button-ghost:hover:not(:disabled) { background: #25334a; }
+:root[data-theme="dark"] .button-ghost { color: #c4cedd; border-color: #3a4960; }
+:root[data-theme="dark"] .topbar .button-ghost { color: #eef2f8; border-color: rgba(255,255,255,.25); }
+:root[data-theme="dark"] .auth-foot { border-color: var(--line); color: var(--muted); }
+:root[data-theme="dark"] .demo-login {
+  background: #101a2a; color: #c5cfdd; border: 1px solid var(--line);
+}
+:root[data-theme="dark"] .demo-login strong,
+:root[data-theme="dark"] .metric-number,
+:root[data-theme="dark"] .transaction-title,
+:root[data-theme="dark"] .amount-cell,
+:root[data-theme="dark"] .empty-state strong,
+:root[data-theme="dark"] .recipient-info strong,
+:root[data-theme="dark"] .side-panel h3 { color: var(--ink); }
+:root[data-theme="dark"] .form-note { border-color: var(--line); color: #e2c68f; }
+:root[data-theme="dark"] .summary-card:not(.summary-main) {
+  background: var(--white); border-color: var(--line);
+}
+:root[data-theme="dark"] .light-icon,
+:root[data-theme="dark"] .withdraw-icon { background: #26344a; color: #d3deed; }
+:root[data-theme="dark"] .section-count { color: #c0cada; background: #253146; }
+:root[data-theme="dark"] .table-wrap { background: var(--white); border-color: var(--line); }
+:root[data-theme="dark"] th {
+  background: #202b3d; color: #aab6c8; border-color: var(--line);
+}
+:root[data-theme="dark"] td { color: #d0d8e5; border-color: #2a374b; }
+:root[data-theme="dark"] tbody tr:hover { background: #1c293b; }
+:root[data-theme="dark"] .transaction-title,
+:root[data-theme="dark"] .amount-cell { color: #e4ebf5; }
+:root[data-theme="dark"] td code,
+:root[data-theme="dark"] .account-route,
+:root[data-theme="dark"] .subtext { color: #9eabc0; }
+:root[data-theme="dark"] .empty-state {
+  background: #141e2d; color: #b4bfd0; border-color: #3a4960;
+}
+:root[data-theme="dark"] .transfer-badge,
+:root[data-theme="dark"] .recipient-avatar { background: #3a3022; color: #e5c58b; }
+:root[data-theme="dark"] .recipient-chip {
+  background: #202c3e; border-color: #3a4960; color: #e0e7f1;
+}
+:root[data-theme="dark"] .recipient-chip span { color: #a7b3c5; }
+:root[data-theme="dark"] .recipient-chip:hover { background: #2b3443; border-color: #b7894e; }
+:root[data-theme="dark"] .security-note {
+  background: #2b261d; border-color: #55452c; color: #dfc99c;
+}
+:root[data-theme="dark"] .steps-list li > span { background: #302a20; color: #e0bf84; }
+:root[data-theme="dark"] .steps-list small { color: #a7b3c5; }
+:root[data-theme="dark"] .side-tip { background: #202d41; color: #d0d9e7; }
+:root[data-theme="dark"] .side-tip code { color: #e0c58e; }
+:root[data-theme="dark"] .beneficiary-row { border-color: var(--line); }
+:root[data-theme="dark"] .type-chip { background: #29364a; color: #d1dcee; }
+:root[data-theme="dark"] .type-deposit { background: #1b3a2b; color: #bde4cb; }
+:root[data-theme="dark"] .type-withdrawal { background: #42262c; color: #f0c3ca; }
+:root[data-theme="dark"] .type-transfer { background: #40331f; color: #edd5a1; }
+:root[data-theme="dark"] .footer { background: #111b2b; color: #9facc0; }

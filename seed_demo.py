@@ -39,7 +39,7 @@ DEMO_USERS = [
     {
         "username": "demo1",
         "password": "LearnDBMS123!",
-        "name": "Aarav Mehta",
+        "name": "Aryan Prajapati",
         "email": "aarav.demo@example.test",
         "phone": "9000000001",
         "account_number": "100000000001",
@@ -48,7 +48,7 @@ DEMO_USERS = [
     {
         "username": "demo2",
         "password": "LearnDBMS123!",
-        "name": "Priya Shah",
+        "name": "Aasiya Walele",
         "email": "priya.demo@example.test",
         "phone": "9000000002",
         "account_number": "100000000002",
@@ -72,6 +72,10 @@ def main():
             user = cursor.fetchone()
             if user:
                 customer_id = user["customer_id"]
+                cursor.execute(
+                    "UPDATE customers SET full_name = %s WHERE customer_id = %s",
+                    (demo["name"], customer_id),
+                )
             else:
                 cursor.execute(
                     "INSERT INTO customers (full_name, email, phone, address) VALUES (%s, %s, %s, %s)",

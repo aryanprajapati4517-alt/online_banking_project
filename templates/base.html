@@ -4,6 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#101a2d">
+  <script>
+    try {
+      if (localStorage.getItem('vaultbank-theme') === 'dark') {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    } catch (error) {}
+  </script>
   <title>{% block title %}VaultBank Demo{% endblock %} · VaultBank</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -22,13 +29,22 @@
       </nav>
       <div class="user-actions">
         <span class="welcome-user">{{ session.get('full_name', 'Customer') }}</span>
+        <button class="button button-ghost button-small theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+          <span class="theme-icon" aria-hidden="true">☾</span><span class="theme-label">Dark mode</span>
+        </button>
         <form action="{{ url_for('logout') }}" method="post" class="inline-form">
           <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
           <button class="button button-ghost button-small" type="submit">Log out</button>
         </form>
       </div>
     {% else %}
-      <nav class="nav-links"><a href="{{ url_for('login') }}">Log in</a><a class="nav-cta" href="{{ url_for('register') }}">Open demo account</a></nav>
+      <nav class="nav-links">
+        <a href="{{ url_for('login') }}">Log in</a>
+        <a class="nav-cta" href="{{ url_for('register') }}">Open demo account</a>
+        <button class="button button-ghost button-small theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+          <span class="theme-icon" aria-hidden="true">☾</span><span class="theme-label">Dark mode</span>
+        </button>
+      </nav>
     {% endif %}
   </header>
 
@@ -50,5 +66,40 @@
     <span>VaultBank · Online Banking System</span>
     <span>Built for DBMS coursework · Flask + MySQL</span>
   </footer>
+  <script>
+    (() => {
+      const root = document.documentElement;
+      const toggle = document.getElementById('theme-toggle');
+      const themeColor = document.querySelector('meta[name="theme-color"]');
+
+      const applyTheme = (theme) => {
+        const isDark = theme === 'dark';
+        root.dataset.theme = isDark ? 'dark' : 'light';
+        if (themeColor) themeColor.content = isDark ? '#0d1422' : '#101a2d';
+        if (toggle) {
+          toggle.setAttribute('aria-pressed', String(isDark));
+          toggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+          toggle.title = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+          toggle.querySelector('.theme-icon').textContent = isDark ? '☀' : '☾';
+          toggle.querySelector('.theme-label').textContent = isDark ? 'Light mode' : 'Dark mode';
+        }
+        try {
+          localStorage.setItem('vaultbank-theme', isDark ? 'dark' : 'light');
+        } catch (error) {}
+      };
+
+      let savedTheme = 'light';
+      try {
+        savedTheme = localStorage.getItem('vaultbank-theme') || 'light';
+      } catch (error) {}
+      applyTheme(savedTheme === 'dark' ? 'dark' : 'light');
+
+      if (toggle) {
+        toggle.addEventListener('click', () => {
+          applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
