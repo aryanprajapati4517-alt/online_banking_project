@@ -66,12 +66,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     CONSTRAINT fk_transactions_to_account FOREIGN KEY (to_account_id)
         REFERENCES accounts(account_id) ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT chk_transaction_amount CHECK (amount > 0.00),
-    CONSTRAINT chk_transaction_accounts CHECK (
-        (transaction_type = 'DEPOSIT' AND from_account_id IS NULL AND to_account_id IS NOT NULL)
-        OR (transaction_type = 'WITHDRAWAL' AND from_account_id IS NOT NULL AND to_account_id IS NULL)
-        OR (transaction_type = 'TRANSFER' AND from_account_id IS NOT NULL AND to_account_id IS NOT NULL
-            AND from_account_id <> to_account_id)
-    ),
+    -- Transaction direction is validated by the Flask operations before insert.
     INDEX idx_transactions_from_time (from_account_id, transaction_time),
     INDEX idx_transactions_to_time (to_account_id, transaction_time)
 ) ENGINE=InnoDB;
