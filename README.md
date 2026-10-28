@@ -165,3 +165,15 @@ The application uses SQL placeholders (`%s`) instead of building queries from fo
 ## Known limitations to explain honestly in viva
 
 This is a local student prototype. It has no OTP, KYC, bank integration, payment gateway, admin console, email verification, deployment hardening, audit infrastructure, or formal penetration testing. Deposits and withdrawals simulate teller actions. It should not be presented as production-ready banking software. For a real deployment, security design, identity verification, secure secret management, HTTPS, rate limiting, monitoring, audit logging, threat modelling, and professional review would be mandatory.
+
+## Public demo deployment (Render + Aiven)
+
+This is a classroom simulation only. It is not production banking software. The included Render blueprint uses the free web-service tier; the free service can sleep when idle. Aiven's free MySQL tier is suitable for a small demo, but may be powered off after extended inactivity. Check both providers' current limits before relying on the site.
+
+1. Create a MySQL service with Aiven and keep its credentials private. Do not reuse the password from a local `.env` file.
+2. Import `schema.sql` into that database using Aiven's SQL console. The app expects the database name `online_banking`.
+3. In Render, create a Blueprint from this repository and deploy `render.yaml`. Set `DB_HOST`, `DB_USER`, and `DB_PASSWORD` from Aiven's connection information. Upload Aiven's CA certificate as a Render secret file named `aiven-ca.pem`, then set `DB_SSL_CA` to `/etc/secrets/aiven-ca.pem`. `SECRET_KEY`, `FLASK_DEBUG`, and `COOKIE_SECURE` are configured by the blueprint.
+4. Seed the two fictional sample users once by running `seed_demo.py` with the Aiven connection values set in your local process environment. Do not commit or send those values in chat. `seed_demo.py` prints the public demo usernames and passwords; those credentials are for this simulation only.
+
+The Render blueprint and app bind to the platform-provided port, disable Flask debug mode, use secure session cookies, and verify the configured MySQL TLS certificate. The app still lacks production-grade abuse controls and operational monitoring; use it only with fictional data.
+
