@@ -4,7 +4,7 @@ services:
     runtime: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn --bind 0.0.0.0:$PORT app:app
+    startCommand: python init_db.py && python seed_demo.py && gunicorn --bind 0.0.0.0:$PORT app:app
     envVars:
       - key: SECRET_KEY
         generateValue: true
@@ -24,4 +24,3 @@ services:
         value: "0"
       - key: COOKIE_SECURE
         value: "1"
-
